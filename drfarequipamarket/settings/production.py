@@ -14,6 +14,38 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
+# Asegurarse de que las aplicaciones de Django estén correctamente configuradas
+DJANGO_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
+]
+
+THIRD_PARTY_APPS = [
+    'cloudinary_storage',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'drf_spectacular',
+    'corsheaders',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'rest_auth',
+    'rest_auth.registration',
+]
+
+LOCAL_APPS = [
+    'drfarequipamarket.users.apps.UsersConfig',
+    'drfarequipamarket.product.apps.ProductConfig',
+    'drfarequipamarket.chat.apps.ChatConfig',
+]
+
+INSTALLED_APPS = ['daphne'] + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
 # Configuración de base de datos para producción
 DATABASES = {
     "default": {
