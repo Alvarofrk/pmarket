@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
+from typing import Optional
 from .models import Category, Product, ProductImage, District, Message, Chat
 
 
@@ -38,10 +40,12 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         exclude = ("vendor",)
 
-    def get_vendor_id(self, obj):
+    @extend_schema_field(serializers.IntegerField(allow_null=True))
+    def get_vendor_id(self, obj: Product) -> Optional[int]:
         return obj.vendor.id if obj.vendor else None
 
-    def get_vendor_username(self, obj):
+    @extend_schema_field(serializers.CharField(allow_null=True))
+    def get_vendor_username(self, obj: Product) -> Optional[str]:
         return obj.vendor.username if obj.vendor else None
 
     def create(self, validated_data):
