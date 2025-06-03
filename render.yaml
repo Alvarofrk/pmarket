@@ -2,8 +2,10 @@ services:
   - type: web
     name: arequipa-market
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn drfarequipamarket.wsgi:application
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    startCommand: daphne -b 0.0.0.0 -p $PORT drfarequipamarket.asgi:application
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
@@ -11,6 +13,22 @@ services:
         generateValue: true
       - key: DJANGO_SETTINGS_MODULE
         value: drfarequipamarket.settings.production
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*.onrender.com,localhost,127.0.0.1"
+      # Database
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      # Cloudinary
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY
