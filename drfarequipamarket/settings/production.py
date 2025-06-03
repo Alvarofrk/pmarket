@@ -9,6 +9,7 @@ from decouple import config
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    "pmarket.onrender.com"
     "*.onrender.com",
     "localhost",
     "127.0.0.1",
