@@ -1,0 +1,112 @@
+- model: product.district
+  pk: 1
+  fields:
+    name: Arequipa
+- model: product.district
+  pk: 2
+  fields:
+    name: Alto Selva Alegre
+- model: product.district
+  pk: 3
+  fields:
+    name: Cayma
+- model: product.district
+  pk: 4
+  fields:
+    name: Cerro Colorado
+- model: product.district
+  pk: 5
+  fields:
+    name: Characato
+- model: product.district
+  pk: 6
+  fields:
+    name: Chiguata
+- model: product.district
+  pk: 7
+  fields:
+    name: Jacobo Hunter
+- model: product.district
+  pk: 8
+  fields:
+    name: La Joya
+- model: product.district
+  pk: 9
+  fields:
+    name: Mariano Melgar
+- model: product.district
+  pk: 10
+  fields:
+    name: Miraflores
+- model: product.district
+  pk: 11
+  fields:
+    name: Mollebaya
+- model: product.district
+  pk: 12
+  fields:
+    name: Paucarpata
+- model: product.district
+  pk: 13
+  fields:
+    name: Pocsi
+- model: product.district
+  pk: 14
+  fields:
+    name: Polobaya
+- model: product.district
+  pk: 15
+  fields:
+    name: Quequeña
+- model: product.district
+  pk: 16
+  fields:
+    name: Sabandia
+- model: product.district
+  pk: 17
+  fields:
+    name: Sachaca
+- model: product.district
+  pk: 18
+  fields:
+    name: San Juan de Siguas
+- model: product.district
+  pk: 19
+  fields:
+    name: San Juan de Tarucani
+- model: product.district
+  pk: 20
+  fields:
+    name: Santa Isabel de Siguas
+- model: product.district
+  pk: 21
+  fields:
+    name: Santa Rita de Siguas
+- model: product.district
+  pk: 22
+  fields:
+    name: Socabaya
+- model: product.district
+  pk: 23
+  fields:
+    name: Tiabaya
+- model: product.district
+  pk: 24
+  fields:
+    name: Uchumayo
+- model: product.district
+  pk: 25
+  fields:
+    name: Vitor
+- model: product.district
+  pk: 26
+  fields:
+    name: Yanahuara
+- model: product.district
+  pk: 27
+  fields:
+    name: Yarabamba
+- model: product.district
+  pk: 28
+  fields:
+    name: Yura 

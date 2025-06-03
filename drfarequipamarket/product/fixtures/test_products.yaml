@@ -1,0 +1,4 @@
+- model: product.Product
+  pk: 1
+  fields:
+    name: Autopartes

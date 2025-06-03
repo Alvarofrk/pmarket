@@ -1,0 +1,124 @@
+- model: product.category
+  pk: 1
+  fields:
+    name: Autopartes
+- model: product.category
+  pk: 2
+  fields:
+    name: Bicicletas
+- model: product.category
+  pk: 3
+  fields:
+    name: Electronica, Audio y videos
+- model: product.category
+  pk: 4
+  fields:
+    name: Computadoras
+- model: product.category
+  pk: 5
+  fields:
+    name: Celulares
+- model: product.category
+  pk: 6
+  fields:
+    name: Ropa Mujeres
+- model: product.category
+  pk: 7
+  fields:
+    name: Ropa Hombres
+- model: product.category
+  pk: 8
+  fields:
+    name: Zapatos Mujeres
+- model: product.category
+  pk: 9
+  fields:
+    name: Zapatos Hombres
+- model: product.category
+  pk: 10
+  fields:
+    name: Muebles
+- model: product.category
+  pk: 11
+  fields:
+    name: Bebes, artículos y Ropa
+- model: product.category
+  pk: 12
+  fields:
+    name: Antiguedad y Colección
+- model: product.category
+  pk: 13
+  fields:
+    name: Arte y Artesanía
+- model: product.category
+  pk: 14
+  fields:
+    name: Libros, Música y Películas
+- model: product.category
+  pk: 15
+  fields:
+    name: Salud y Belleza
+- model: product.category
+  pk: 16
+  fields:
+    name: Artículos de Hogar, Cocina y Baño
+- model: product.category
+  pk: 17
+  fields:
+    name: Jardinería
+- model: product.category
+  pk: 18
+  fields:
+    name: Artículos y ropa de deportes
+- model: product.category
+  pk: 19
+  fields:
+    name: Gimnasio
+- model: product.category
+  pk: 20
+  fields:
+    name: TV
+- model: product.category
+  pk: 21
+  fields:
+    name: Instrumentos musicales
+- model: product.category
+  pk: 22
+  fields:
+    name: Camas
+- model: product.category
+  pk: 23
+  fields:
+    name: Juguetes y Juegos
+- model: product.category
+  pk: 24
+  fields:
+    name: Artículos para mascotas
+- model: product.category
+  pk: 25
+  fields:
+    name: Artículos Gratis
+- model: product.category
+  pk: 26
+  fields:
+    name: Joyas
+- model: product.category
+  pk: 27
+  fields:
+    name: Construcción
+- model: product.category
+  pk: 28
+  fields:
+    name: Ganaderías - Agro
+- model: product.category
+  pk: 29
+  fields:
+    name: Consolas y Videojuegos
+- model: product.category
+  pk: 30
+  fields:
+    name: Artículos de oficina
+- model: product.category
+  pk: 31
+  fields:
+    name: Equipamientos de salud
