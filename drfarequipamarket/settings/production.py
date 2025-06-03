@@ -15,6 +15,7 @@ ALLOWED_HOSTS = [
     "*.onrender.com",
     "localhost",
     "127.0.0.1",
+    "*",  # Similar a local.py
 ]
 
 # Asegurarse de que las aplicaciones de Django estén correctamente configuradas
@@ -51,16 +52,16 @@ INSTALLED_APPS = ['daphne'] + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # Configuración de base de datos para producción
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config('DB_NAME', default='arequipamarket'),
-        "USER": config('DB_USER', default='postgres'),
-        "PASSWORD": config('DB_PASSWORD', default=''),
-        "HOST": config('DB_HOST', default='localhost'),
-        "PORT": config('DB_PORT', default='5432'),
-        "CONN_MAX_AGE": 60,  # Mantener conexiones vivas por 60 segundos
-        "OPTIONS": {
-            "connect_timeout": 10,
+    'default': {
+        'ENGINE': config('DATABASE_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': config('DATABASE_NAME', default='arequipamarket'),
+        'USER': config('DATABASE_USER', default='postgres'),
+        'PASSWORD': config('DATABASE_PASSWORD', default=''),
+        'HOST': config('DATABASE_HOST', default='localhost'),
+        'PORT': config('DATABASE_PORT', default='5432', cast=int),
+        'CONN_MAX_AGE': 60,
+        'OPTIONS': {
+            'connect_timeout': 10,
         }
     }
 }
@@ -70,7 +71,7 @@ CLOUDINARY = {
     'cloud_name': config('CLOUDINARY_CLOUD_NAME'),
     'api_key': config('CLOUDINARY_API_KEY'),
     'api_secret': config('CLOUDINARY_API_SECRET'),
-    'secure': True,  # Forzar HTTPS
+    'secure': True,
 }
 
 # Configuración de archivos estáticos y media
@@ -83,17 +84,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
-# Configuración de seguridad
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_HSTS_SECONDS = 31536000  # 1 año
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 # CORS configuration
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
@@ -102,25 +92,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://*.onrender.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-]
-CORS_ALLOWED_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
-CORS_ALLOWED_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
+    'http://*',
+    'https://*',
 ]
 
 # CSRF configuration
@@ -129,19 +102,23 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.onrender.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'http://*',
+    'https://*',
 ]
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_USE_SESSIONS = True
 
-# Session configuration
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_AGE = 1209600  # 2 semanas en segundos
+# Security settings (solo si DEBUG es False)
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Email configuration (usando console backend para desarrollo)
+# Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Logging configuration
