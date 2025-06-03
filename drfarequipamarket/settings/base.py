@@ -36,7 +36,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 # Application definition
 
 INSTALLED_APPS = [
-    "daphne",
+    # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,20 +44,24 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
-    # External Apps
+    
+    # Third party apps
+    "cloudinary_storage",  # Debe ir antes de staticfiles
     "rest_framework",
-    "drf_spectacular",
     "rest_framework.authtoken",
+    "drf_spectacular",
+    "corsheaders",
     "allauth",
     "allauth.account",
-    "rest_auth.registration",
     "allauth.socialaccount",
-    "corsheaders",
     "rest_auth",
-    # Internal Apps
-    "drfarequipamarket.chat",
-    "drfarequipamarket.product",
-    "drfarequipamarket.users",
+    "rest_auth.registration",
+    "daphne",
+    
+    # Local apps
+    "drfarequipamarket.users.apps.UsersConfig",
+    "drfarequipamarket.product.apps.ProductConfig",
+    "drfarequipamarket.chat.apps.ChatConfig",
 ]
 
 MIDDLEWARE = [

@@ -3,6 +3,7 @@ import os
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from decouple import config
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -16,16 +17,20 @@ ALLOWED_HOSTS = [
 # Configuración de base de datos para producción
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config('DB_NAME', default='arequipamarket'),
+        "USER": config('DB_USER', default='postgres'),
+        "PASSWORD": config('DB_PASSWORD', default=''),
+        "HOST": config('DB_HOST', default='localhost'),
+        "PORT": config('DB_PORT', default='5432'),
     }
 }
 
 # Configuración de Cloudinary
 CLOUDINARY = {
-    'cloud_name': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'api_key': os.environ.get('CLOUDINARY_API_KEY'),
-    'api_secret': os.environ.get('CLOUDINARY_API_SECRET'),
+    'cloud_name': config('CLOUDINARY_CLOUD_NAME'),
+    'api_key': config('CLOUDINARY_API_KEY'),
+    'api_secret': config('CLOUDINARY_API_SECRET'),
 }
 
 # Configuración de archivos estáticos y media
