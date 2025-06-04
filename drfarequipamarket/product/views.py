@@ -18,18 +18,10 @@ from .serializers import CategorySerializer, ProductSerializer, DistrictSerializ
 
 logger = logging.getLogger(__name__)
 
-class CategoryViewSet(viewsets.ViewSet):
-    """
-    Viewset de categorías
-    """
-
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     permission_classes = [AllowAny]
-
-    @extend_schema(responses=CategorySerializer)
-    def list(self, request):
-        serializer = CategorySerializer(self.queryset, many=True)
-        return Response(serializer.data)
 
 
 class ProductViewSet(viewsets.ModelViewSet):
