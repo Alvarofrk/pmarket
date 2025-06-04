@@ -56,29 +56,6 @@ class Product(models.Model):
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     vendor = models.ForeignKey("users.CustomUser", on_delete=models.CASCADE)
-    
-    # Campos de ubicación
-    departamento = models.ForeignKey(
-        Departamento, 
-        on_delete=models.CASCADE, 
-        related_name='products_in_departamento',
-        null=True,
-        blank=True
-    )
-    province = models.ForeignKey(
-        Province, 
-        on_delete=models.CASCADE, 
-        related_name='products_in_province',
-        null=True,
-        blank=True
-    )
-    district = models.ForeignKey(
-        District, 
-        on_delete=models.CASCADE, 
-        related_name='products_in_district',
-        null=True,
-        blank=True
-    )
 
     def __str__(self):
         return str(self.id) + " - " + self.name
