@@ -31,7 +31,6 @@ class ProductSerializer(serializers.ModelSerializer):
     description = serializers.CharField(required=True)
     price = serializers.IntegerField(required=True)
     state = serializers.CharField(required=True)
-    district = serializers.CharField(required=True)
     currency = serializers.CharField(required=True)
     vendor_id = serializers.SerializerMethodField()
     vendor_username = serializers.SerializerMethodField()
