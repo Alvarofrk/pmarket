@@ -11,7 +11,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("auth", "0012_alter_user_first_name_max_length"),
-        ("product", "0001_initial"),
     ]
 
     operations = [
@@ -90,14 +89,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("phone", models.CharField(blank=True, max_length=15, null=True)),
-                (
-                    "favorite_products",
-                    models.ManyToManyField(
-                        blank=True,
-                        related_name="favorite_products",
-                        to="product.product",
-                    ),
-                ),
                 (
                     "groups",
                     models.ManyToManyField(

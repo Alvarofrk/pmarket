@@ -21,25 +21,17 @@ class Departamento(models.Model):
 
 
 class Province(models.Model):
-    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, related_name='provinces')
-    name = models.CharField(max_length=100)
-
-    class Meta:
-        unique_together = ('departamento', 'name') # Ensure province names are unique per departamento
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
-        return f"{self.name}, {self.departamento.name}"
+        return self.name
 
 
 class District(models.Model):
-    province = models.ForeignKey(Province, on_delete=models.CASCADE, related_name='districts', null=True, blank=True) # Null/blank true temporarily if you have existing districts
-    name = models.CharField(max_length=100)
-
-    class Meta:
-        unique_together = ('province', 'name') # Ensure district names are unique per province
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
-        return f"{self.name}, {self.province.name}"
+        return self.name
 
 
 class Product(models.Model):
@@ -60,13 +52,33 @@ class Product(models.Model):
         max_length=3, default="USD", choices=CURRENCIES
     )
     state = models.CharField(max_length=6, choices=PRODUCT_STATE)
-    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, related_name='products_in_departamento', null=True, blank=True)
-    province = models.ForeignKey(Province, on_delete=models.CASCADE, related_name='products_in_province', null=True, blank=True)
-    district = models.ForeignKey(District, on_delete=models.CASCADE, related_name='products_in_district', null=True, blank=True)
     is_available = models.BooleanField(default=True)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     vendor = models.ForeignKey("users.CustomUser", on_delete=models.CASCADE)
+    
+    # Campos de ubicación
+    departamento = models.ForeignKey(
+        Departamento, 
+        on_delete=models.CASCADE, 
+        related_name='products_in_departamento',
+        null=True,
+        blank=True
+    )
+    province = models.ForeignKey(
+        Province, 
+        on_delete=models.CASCADE, 
+        related_name='products_in_province',
+        null=True,
+        blank=True
+    )
+    district = models.ForeignKey(
+        District, 
+        on_delete=models.CASCADE, 
+        related_name='products_in_district',
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return str(self.id) + " - " + self.name
