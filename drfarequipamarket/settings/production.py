@@ -85,7 +85,7 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' # 
 # Configuración de archivos estáticos y media (ajustar si usas S3 para estáticos)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-MEDIA_URL = '/media/' # Ajustar si usas un bucket público o prefieres URL de R2 directamente
+# MEDIA_URL = '/media/' # Ajustar si usas un bucket público o prefieres URL de R2 directamente
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
