@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from drfarequipamarket.users import models as UserModels
+from drfarequipamarket.users.models import CustomUser
+from drfarequipamarket.product import models as ProductModels
+from storages.backends.s3boto3 import S3Boto3Storage
 
 
 class Category(models.Model):
@@ -41,7 +44,7 @@ class Product(models.Model):
 class ProductImage(models.Model):
     name = models.CharField(max_length=100, blank=True)
     alternative_text = models.CharField(max_length=100, blank=True)
-    url = models.ImageField(upload_to='product_images/')
+    url = models.ImageField(upload_to='product_images/', storage=S3Boto3Storage())
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="product_image"
     )
