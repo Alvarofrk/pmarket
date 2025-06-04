@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     
     # Third party apps
-    "cloudinary_storage",  # Debe ir antes de staticfiles
+    # "cloudinary_storage",  # Eliminando cloudinary_storage
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
