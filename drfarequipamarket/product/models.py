@@ -13,6 +13,35 @@ class Category(models.Model):
         return str(self.id) + " - " + self.name
 
 
+class Departamento(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Province(models.Model):
+    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, related_name='provinces')
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        unique_together = ('departamento', 'name') # Ensure province names are unique per departamento
+
+    def __str__(self):
+        return f"{self.name}, {self.departamento.name}"
+
+
+class District(models.Model):
+    province = models.ForeignKey(Province, on_delete=models.CASCADE, related_name='districts', null=True, blank=True) # Null/blank true temporarily if you have existing districts
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        unique_together = ('province', 'name') # Ensure district names are unique per province
+
+    def __str__(self):
+        return f"{self.name}, {self.province.name}"
+
+
 class Product(models.Model):
     # Constants
     PRODUCT_STATE = [
@@ -31,7 +60,9 @@ class Product(models.Model):
         max_length=3, default="USD", choices=CURRENCIES
     )
     state = models.CharField(max_length=6, choices=PRODUCT_STATE)
-    district = models.CharField(max_length=100)
+    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, related_name='products_in_departamento', null=True, blank=True)
+    province = models.ForeignKey(Province, on_delete=models.CASCADE, related_name='products_in_province', null=True, blank=True)
+    district = models.ForeignKey(District, on_delete=models.CASCADE, related_name='products_in_district', null=True, blank=True)
     is_available = models.BooleanField(default=True)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -51,13 +82,6 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return self.name or f"Image for product {self.product.id}"
-
-
-class District(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.name
 
 
 # MODELOS DE CHAT
