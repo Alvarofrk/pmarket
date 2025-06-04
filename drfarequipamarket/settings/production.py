@@ -1,9 +1,13 @@
 from .base import *
 import os
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+# Eliminando importaciones de Cloudinary
+# import cloudinary
+# import cloudinary.uploader
+# import cloudinary.api
 from decouple import config
+
+# Importar backend de storages
+from storages.backends.s3boto3 import S3Boto3Storage
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG se puede configurar mediante variable de entorno
@@ -30,7 +34,8 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'cloudinary_storage',  # Debe ir antes de staticfiles
+    # 'cloudinary_storage',  # Eliminando cloudinary_storage
+    'storages', # Agregando django-storages
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
@@ -66,23 +71,23 @@ DATABASES = {
     }
 }
 
-# Configuración de Cloudinary
-CLOUDINARY = {
-    'cloud_name': config('CLOUDINARY_CLOUD_NAME'),
-    'api_key': config('CLOUDINARY_API_KEY'),
-    'api_secret': config('CLOUDINARY_API_SECRET'),
-    'secure': True,
-}
+# Configuración de Cloudflare R2 con django-storages
+AWS_STORAGE_BUCKET_NAME = config('CLOUDFLARE_R2_BUCKET')
+AWS_S3_ENDPOINT_URL = config('CLOUDFLARE_R2_BUCKET_ENDPOINT')
+AWS_ACCESS_KEY_ID = config('CLOUDFLARE_R2_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = config('CLOUDFLARE_R2_SECRET_KEY')
+AWS_S3_SIGNATURE_VERSION = 's3v4'
 
-# Configuración de archivos estáticos y media
+# Configurar django-storages como backend de almacenamiento
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' # Puedes usar esto o un backend S3 si quieres
+
+# Configuración de archivos estáticos y media (ajustar si usas S3 para estáticos)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media/' # Ajustar si usas un bucket público o prefieres URL de R2 directamente
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Configurar Cloudinary como backend de almacenamiento
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 # CORS configuration
 CORS_ALLOW_ALL_ORIGINS = True
