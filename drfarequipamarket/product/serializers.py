@@ -34,6 +34,7 @@ class ProductSerializer(serializers.ModelSerializer):
     currency = serializers.CharField(required=True)
     vendor_id = serializers.SerializerMethodField()
     vendor_username = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -46,6 +47,13 @@ class ProductSerializer(serializers.ModelSerializer):
     @extend_schema_field(serializers.CharField(allow_null=True))
     def get_vendor_username(self, obj: Product) -> Optional[str]:
         return obj.vendor.username if obj.vendor else None
+
+    def get_is_favorite(self, obj):
+        request = self.context.get('request', None)
+        user = getattr(request, 'user', None)
+        if user and user.is_authenticated:
+            return obj in user.favorite_products.all()
+        return False
 
     def create(self, validated_data):
         request = self.context.get('request')

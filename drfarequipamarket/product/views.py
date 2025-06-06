@@ -164,7 +164,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         Endpoint que retorna los productos favoritos del usuario
         """
         serializer = ProductSerializer(
-            self.request.user.favorite_products.all(), many=True
+            self.request.user.favorite_products.all(), many=True, context={'request': request}
         )
         return Response(serializer.data)
 
@@ -182,6 +182,11 @@ class ProductViewSet(viewsets.ModelViewSet):
         product.is_available = False
         product.save()
         return Response({"detail": "Producto marcado como vendido"})
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, context={'request': request})
+        return Response(serializer.data)
 
 # ViewSet para District
 class DistrictViewSet(viewsets.ViewSet):
