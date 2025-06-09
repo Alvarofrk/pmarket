@@ -4,9 +4,8 @@ from drfarequipamarket.users.models import CustomUser
 from drfarequipamarket.product.models import Product
 
 class ChatGroupSerializer(serializers.ModelSerializer):
-    group_name = serializers.SlugRelatedField(
-        queryset=Product.objects.all(),
-        slug_field='name'
+    group_name = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all()
     )
     
     class Meta:
