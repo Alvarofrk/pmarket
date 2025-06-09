@@ -21,7 +21,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 router = DefaultRouter()
 router.register(r"category", views.CategoryViewSet)
-router.register(r"chat", ViewChat.ChatGroupViewSet)
 router.register(r"product", views.ProductViewSet)
 router.register(r"district", views.DistrictViewSet)
 router.register(r"chat", views.ChatViewSet)
