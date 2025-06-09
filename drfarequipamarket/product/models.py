@@ -57,6 +57,11 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     vendor = models.ForeignKey("users.CustomUser", on_delete=models.CASCADE)
 
+    # NUEVOS CAMPOS
+    departamento = models.CharField(max_length=100, blank=True, null=True)
+    provincia = models.CharField(max_length=100, blank=True, null=True)
+    distrito = models.CharField(max_length=100, blank=True, null=True)
+
     def __str__(self):
         return str(self.id) + " - " + self.name
 

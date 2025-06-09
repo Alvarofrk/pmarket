@@ -35,6 +35,9 @@ class ProductSerializer(serializers.ModelSerializer):
     vendor_id = serializers.SerializerMethodField()
     vendor_username = serializers.SerializerMethodField()
     is_favorite = serializers.SerializerMethodField()
+    departamento = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    provincia = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    distrito = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
         model = Product
