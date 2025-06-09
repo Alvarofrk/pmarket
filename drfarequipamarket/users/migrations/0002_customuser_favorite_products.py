@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0002_departamento_district_province_product_departamento_and_more'),
+        ('product', '0001_initial'),
         ('users', '0001_initial'),
     ]
 
