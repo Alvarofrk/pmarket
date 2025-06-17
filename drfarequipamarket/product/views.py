@@ -7,7 +7,7 @@ from drf_spectacular.types import OpenApiTypes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.db import models
 import logging
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from drfarequipamarket.chat.models import ChatGroup
 from drfarequipamarket.chat.serializers import ChatGroupSerializer
@@ -32,7 +32,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
 
     def get_queryset(self):
         queryset = Product.objects.all()
