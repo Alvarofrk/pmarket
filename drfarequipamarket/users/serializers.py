@@ -4,6 +4,12 @@ from dj_rest_auth.serializers import UserDetailsSerializer
 from .models import CustomUser
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('id', 'email', 'username', 'name', 'phone')
+        read_only_fields = ('email',)
+
 class CustomRegisterSerializer(RegisterSerializer):
     def __init__(self, *args, **kwargs):
         print("INSTANCIANDO CustomRegisterSerializer")

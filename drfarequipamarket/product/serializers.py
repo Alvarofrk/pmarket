@@ -74,17 +74,17 @@ class DistrictSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# Serializers para Chat y Message
-class MessageSerializer(serializers.ModelSerializer):
-    sender_username = serializers.CharField(source='sender.username', read_only=True)
-    class Meta:
-        model = Message
-        fields = ['id', 'chat', 'sender', 'sender_username', 'text', 'created_at']
+# Eliminando serializers redundantes
+# class MessageSerializer(serializers.ModelSerializer):
+#     sender_username = serializers.CharField(source='sender.username', read_only=True)
+#     class Meta:
+#         model = Message
+#         fields = ['id', 'chat', 'sender', 'sender_username', 'text', 'created_at']
 
-class ChatSerializer(serializers.ModelSerializer):
-    messages = MessageSerializer(many=True, read_only=True)
-    buyer_username = serializers.CharField(source='buyer.username', read_only=True)
-    vendor_username = serializers.CharField(source='vendor.username', read_only=True)
-    class Meta:
-        model = Chat
-        fields = ['id', 'product', 'buyer', 'vendor', 'buyer_username', 'vendor_username', 'created_at', 'messages']
+# class ChatSerializer(serializers.ModelSerializer):
+#     messages = MessageSerializer(many=True, read_only=True)
+#     buyer_username = serializers.CharField(source='buyer.username', read_only=True)
+#     vendor_username = serializers.CharField(source='vendor.username', read_only=True)
+#     class Meta:
+#         model = Chat
+#         fields = ['id', 'product', 'buyer', 'vendor', 'buyer_username', 'vendor_username', 'created_at', 'messages']

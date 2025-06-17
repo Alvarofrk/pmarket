@@ -35,7 +35,17 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
+      # Redis
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: arequipa-market-redis
+          property: connectionString
     disk:
       name: media
       mountPath: /app/media
-      sizeGB: 1 
+      sizeGB: 1
+
+  - type: redis
+    name: arequipa-market-redis
+    plan: free 

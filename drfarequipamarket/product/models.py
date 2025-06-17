@@ -76,23 +76,3 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return self.name or f"Image for product {self.product.id}"
-
-
-# MODELOS DE CHAT
-class Chat(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='chats')
-    buyer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='chats_as_buyer')
-    vendor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='chats_as_vendor')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Chat producto {self.product.id} - comprador {self.buyer.id} - vendedor {self.vendor.id}"
-
-class Message(models.Model):
-    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Mensaje de {self.sender} en chat {self.chat.id} ({self.created_at})"
