@@ -5,7 +5,7 @@ import sys
 from drfarequipamarket.settings import base
 
  
-
+ 
 def main():
     """Run administrative tasks."""
 
