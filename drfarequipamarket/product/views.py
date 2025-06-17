@@ -77,6 +77,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         Inicia el chat entre dos usuarios. Un seller y un buyer. 
         Se debe enviar seller y buyer en el request_body
         """
+        logger.info(f"Request data: {request.data}")
+        logger.info(f"Content-Type: {request.content_type}")
+        
         group_name = self.get_object()
         seller = request.data.get('seller')
         buyer = request.data.get('buyer')
@@ -84,23 +87,29 @@ class ProductViewSet(viewsets.ModelViewSet):
         if not seller or not buyer:
             return Response({'detail': 'seller and buyer are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if seller  == buyer:
+        if seller == buyer:
             return Response({'detail': 'Cannot create a chat with the same user as both seller and buyer.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        seller = get_object_or_404(CustomUser, id=seller)
-        buyer = get_object_or_404(CustomUser, id=buyer)
-        if not seller or not buyer:
-            return Response({'detail': 'Seller or buyer not found in DB.'}, status=status.HTTP_400_BAD_REQUEST)
-        chat_group, created = ChatGroup.objects.get_or_create(
-            group_name=group_name,
-            seller=seller,
-            buyer=buyer
-        )
+        try:
+            seller = get_object_or_404(CustomUser, id=seller)
+            buyer = get_object_or_404(CustomUser, id=buyer)
+        except Exception as e:
+            logger.error(f"Error al obtener usuarios: {str(e)}")
+            return Response({'detail': 'Error al obtener usuarios.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = ChatGroupSerializer(chat_group)
-        if created:
-            return Response({'status': 'Chat created', 'chat': serializer.data}, status=status.HTTP_201_CREATED)
-        return Response({'status': 'Chat already exists', 'chat': serializer.data}, status=status.HTTP_200_OK)
+        try:
+            chat_group, created = ChatGroup.objects.get_or_create(
+                group_name=group_name,
+                seller=seller,
+                buyer=buyer
+            )
+            serializer = ChatGroupSerializer(chat_group)
+            if created:
+                return Response({'status': 'Chat created', 'chat': serializer.data}, status=status.HTTP_201_CREATED)
+            return Response({'status': 'Chat already exists', 'chat': serializer.data}, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Error al crear chat: {str(e)}")
+            return Response({'detail': 'Error al crear el chat.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         logger.info(f"Datos recibidos en create: {request.data}")
