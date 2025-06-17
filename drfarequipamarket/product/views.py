@@ -218,7 +218,15 @@ class ChatViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Chat.objects.filter(models.Q(buyer=user) | models.Q(vendor=user)).order_by('-created_at')
+        product_id = self.request.query_params.get('product')
+        qs = Chat.objects.all()
+        if product_id:
+            # Solo mostrar los chats de ese producto donde el usuario es vendedor
+            qs = qs.filter(product_id=product_id, vendor=user)
+        else:
+            # Mostrar todos los chats donde el usuario es comprador o vendedor
+            qs = qs.filter(models.Q(buyer=user) | models.Q(vendor=user))
+        return qs.order_by('-created_at')
 
     def perform_create(self, serializer):
         # Evitar duplicados: buscar si ya existe un chat para este producto y usuarios
