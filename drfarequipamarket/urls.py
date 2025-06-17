@@ -23,6 +23,7 @@ router = DefaultRouter()
 router.register(r"category", views.CategoryViewSet)
 router.register(r"product", views.ProductViewSet)
 router.register(r"district", views.DistrictViewSet)
+router.register(r"chatgroup", ViewChat.ChatGroupViewSet)
 router.register(r"chat", views.ChatViewSet)
 router.register(r"message", views.MessageViewSet)
 
