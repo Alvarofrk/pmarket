@@ -8,7 +8,7 @@ from rest_framework.routers import DefaultRouter
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from drfarequipamarket.product import views
-from drfarequipamarket.chat.views import ChatGroupViewSet, ChatNotificationViewSet
+from drfarequipamarket.chat import views as ViewChat
 
 # Changed imports
 from django.urls import re_path as url
@@ -20,11 +20,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 router = DefaultRouter()
-router.register(r'products', views.ProductViewSet)
-router.register(r'categories', views.CategoryViewSet)
-router.register(r'districts', views.DistrictViewSet)
-router.register(r'chats', ChatGroupViewSet, basename='chat')
-router.register(r'notifications', ChatNotificationViewSet, basename='notification')
+router.register(r"category", views.CategoryViewSet)
+router.register(r"product", views.ProductViewSet)
+router.register(r"district", views.DistrictViewSet)
+router.register(r"chat", views.ChatViewSet)
+router.register(r"message", views.MessageViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -44,7 +44,6 @@ urlpatterns = [
         name="account_confirm_email",
     ),
     path("", RedirectView.as_view(url="/api/schema/docs/", permanent=False)),
-    path('api/auth/', include('drfarequipamarket.users.urls')),
 ]
 
 # Agregar configuración para servir archivos de medios en desarrollo

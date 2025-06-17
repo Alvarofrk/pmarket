@@ -4,7 +4,6 @@ from asgiref.sync import async_to_sync
 import json
 from .models import ChatGroup, GroupMessage, ChatNotification
 from django.core.exceptions import ValidationError
-from django.db import transaction
 
 class ChatroomConsumer(WebsocketConsumer):
     def connect(self):
@@ -59,22 +58,14 @@ class ChatroomConsumer(WebsocketConsumer):
                 'error': 'Internal server error'
             }))
 
-    @transaction.atomic
     def _handle_message(self, data):
-        body = data.get('body', '').strip()
+        body = data.get('body')
         message_type = data.get('message_type', 'text')
         file_url = data.get('file_url')
 
-        # Validaciones
         if not body and message_type == 'text':
             self.send(text_data=json.dumps({
                 'error': 'Message body is required for text messages'
-            }))
-            return
-
-        if len(body) > 300:
-            self.send(text_data=json.dumps({
-                'error': 'Message too long (max 300 characters)'
             }))
             return
 
@@ -84,7 +75,6 @@ class ChatroomConsumer(WebsocketConsumer):
             }))
             return
 
-        # Crear mensaje y notificación en una transacción
         message = GroupMessage.objects.create(
             group=self.chatroom,
             author=self.user,
@@ -135,7 +125,6 @@ class ChatroomConsumer(WebsocketConsumer):
             self.chatroom_name, event
         )
 
-    @transaction.atomic
     def _handle_read(self, data):
         message_ids = data.get('message_ids', [])
         if not message_ids:

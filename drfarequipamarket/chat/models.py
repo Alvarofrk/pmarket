@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from drfarequipamarket.product import models as ProductModels
 from drfarequipamarket.users import models as UserModels
 
@@ -8,7 +9,7 @@ class ChatGroup(models.Model):
     group_name = models.ForeignKey(ProductModels.Product, default='', on_delete=models.CASCADE)
     seller = models.ForeignKey(UserModels.CustomUser, related_name='chat_seller', on_delete=models.CASCADE)
     buyer = models.ForeignKey(UserModels.CustomUser, related_name='chat_buyer', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
@@ -64,11 +65,6 @@ class ChatNotification(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        indexes = [
-            models.Index(fields=['recipient', 'is_read']),
-            models.Index(fields=['created_at']),
-            models.Index(fields=['notification_type']),
-        ]
 
     def __str__(self):
         return f'{self.notification_type} notification for {self.recipient.email}'

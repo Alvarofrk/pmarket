@@ -5,7 +5,6 @@ import os
 # import cloudinary.uploader
 # import cloudinary.api
 from decouple import config
-from urllib.parse import urlparse
 
 # Importar backend de storages
 from storages.backends.s3boto3 import S3Boto3Storage
@@ -144,22 +143,5 @@ LOGGING = {
         'handlers': ['console'],
         'level': 'INFO',
         'propagate': False,
-    },
-}
-
-# Redis configuration
-REDIS_URL = config('REDIS_URL', default='redis://localhost:6379')
-redis_url = urlparse(REDIS_URL)
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [{
-                "address": (redis_url.hostname, redis_url.port),
-                "password": redis_url.password,
-                "ssl": redis_url.scheme == "rediss",
-            }],
-        },
     },
 }

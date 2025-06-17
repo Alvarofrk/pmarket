@@ -9,12 +9,12 @@ from django.db import models
 import logging
 from rest_framework.parsers import MultiPartParser, FormParser
 
-from drfarequipamarket.chat.models import ChatGroup, GroupMessage
+from drfarequipamarket.chat.models import ChatGroup
+from drfarequipamarket.chat.serializers import ChatGroupSerializer
 from drfarequipamarket.users.models import CustomUser
 
-from .models import Category, Product, District
-from .serializers import CategorySerializer, ProductSerializer, DistrictSerializer
-from drfarequipamarket.chat.serializers import ChatGroupSerializer
+from .models import Category, Product, District, Chat, Message
+from .serializers import CategorySerializer, ProductSerializer, DistrictSerializer, ChatSerializer, MessageSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -200,3 +200,37 @@ class DistrictViewSet(viewsets.ViewSet):
     def list(self, request):
         serializer = DistrictSerializer(self.queryset, many=True)
         return Response(serializer.data)
+
+# ViewSet para Chat
+class ChatViewSet(viewsets.ModelViewSet):
+    queryset = Chat.objects.all()
+    serializer_class = ChatSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Chat.objects.filter(models.Q(buyer=user) | models.Q(vendor=user)).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        # Evitar duplicados: buscar si ya existe un chat para este producto y usuarios
+        product = serializer.validated_data['product']
+        buyer = serializer.validated_data['buyer']
+        vendor = serializer.validated_data['vendor']
+        chat, created = Chat.objects.get_or_create(product=product, buyer=buyer, vendor=vendor)
+        return chat
+
+# ViewSet para Message
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        chat_id = self.request.query_params.get('chat')
+        qs = Message.objects.all()
+        if chat_id:
+            qs = qs.filter(chat_id=chat_id)
+        return qs.order_by('created_at')
+
+    def perform_create(self, serializer):
+        serializer.save(sender=self.request.user)
