@@ -103,7 +103,7 @@ class ProductViewSet(viewsets.ModelViewSet):
                 seller=seller,
                 buyer=buyer
             )
-            serializer = ChatGroupSerializer(chat_group)
+            serializer = ChatGroupSerializer(chat_group, context={'request': request})
             if created:
                 return Response({'status': 'Chat created', 'chat': serializer.data}, status=status.HTTP_201_CREATED)
             return Response({'status': 'Chat already exists', 'chat': serializer.data}, status=status.HTTP_200_OK)
