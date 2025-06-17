@@ -1,13 +1,11 @@
 from rest_framework import serializers
-from drf_spectacular.utils import extend_schema_field
-from typing import Optional
-from .models import Category, Product, ProductImage, District, Message, Chat
+from .models import Category, Product, ProductImage, District
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = "__all__"
+        fields = ['id', 'name', 'description', 'image']
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -25,38 +23,23 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    product_image = ProductImageSerializer(many=True, required=False)
-    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), required=True)
-    name = serializers.CharField(required=True)
-    description = serializers.CharField(required=True)
-    price = serializers.IntegerField(required=True)
-    state = serializers.CharField(required=True)
-    currency = serializers.CharField(required=True)
-    vendor_id = serializers.SerializerMethodField()
-    vendor_username = serializers.SerializerMethodField()
-    is_favorite = serializers.SerializerMethodField()
-    departamento = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    provincia = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    distrito = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    category_name = serializers.CharField(source='category.name', read_only=True)
+    seller_name = serializers.CharField(source='seller.username', read_only=True)
+    images = serializers.SerializerMethodField()
+    district_name = serializers.CharField(source='district.name', read_only=True)
 
     class Meta:
         model = Product
-        exclude = ("vendor",)
+        fields = [
+            'id', 'name', 'description', 'price', 'category', 'category_name',
+            'seller', 'seller_name', 'images', 'district', 'district_name',
+            'created_at', 'updated_at', 'is_active'
+        ]
+        read_only_fields = ['seller', 'created_at', 'updated_at']
 
-    @extend_schema_field(serializers.IntegerField(allow_null=True))
-    def get_vendor_id(self, obj: Product) -> Optional[int]:
-        return obj.vendor.id if obj.vendor else None
-
-    @extend_schema_field(serializers.CharField(allow_null=True))
-    def get_vendor_username(self, obj: Product) -> Optional[str]:
-        return obj.vendor.username if obj.vendor else None
-
-    def get_is_favorite(self, obj):
-        request = self.context.get('request', None)
-        user = getattr(request, 'user', None)
-        if user and user.is_authenticated:
-            return obj in user.favorite_products.all()
-        return False
+    def get_images(self, obj):
+        images = obj.images.all()
+        return [{'id': img.id, 'image': img.image.url} for img in images]
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -67,24 +50,7 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
 
 
-# Serializer para District
 class DistrictSerializer(serializers.ModelSerializer):
     class Meta:
         model = District
-        fields = "__all__"
-
-
-# Eliminando serializers redundantes
-# class MessageSerializer(serializers.ModelSerializer):
-#     sender_username = serializers.CharField(source='sender.username', read_only=True)
-#     class Meta:
-#         model = Message
-#         fields = ['id', 'chat', 'sender', 'sender_username', 'text', 'created_at']
-
-# class ChatSerializer(serializers.ModelSerializer):
-#     messages = MessageSerializer(many=True, read_only=True)
-#     buyer_username = serializers.CharField(source='buyer.username', read_only=True)
-#     vendor_username = serializers.CharField(source='vendor.username', read_only=True)
-#     class Meta:
-#         model = Chat
-#         fields = ['id', 'product', 'buyer', 'vendor', 'buyer_username', 'vendor_username', 'created_at', 'messages']
+        fields = ['id', 'name', 'description']
