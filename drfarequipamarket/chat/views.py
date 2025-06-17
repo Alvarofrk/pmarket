@@ -7,6 +7,7 @@ from drfarequipamarket.chat.serializers import ChatGroupSerializer, GroupMessage
 from django.db.models import Q
 
 class ChatGroupViewSet(viewsets.ModelViewSet):
+    queryset = ChatGroup.objects.all()
     serializer_class = ChatGroupSerializer
 
     def get_queryset(self):
