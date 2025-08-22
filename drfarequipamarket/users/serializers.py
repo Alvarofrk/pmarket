@@ -33,6 +33,26 @@ class CustomRegisterSerializer(RegisterSerializer):
         print(f"DATA RECIBIDA EN REGISTRO: {data}")
         return super().validate(data)
 
+    def save(self, request):
+        print("=== INICIO DEL PROCESO DE REGISTRO ===")
+        print("INSTANCIANDO CustomRegisterSerializer")
+        print("REQUEST:", request)
+        print("VALIDATED_DATA:", self.validated_data)
+
+        try:
+            print("LLAMANDO AL MÉTODO SAVE DEL PADRE...")
+            user = super(CustomRegisterSerializer, self).save(request)
+            print("USUARIO CREADO EXITOSAMENTE:", user)
+            print("ID DEL USUARIO:", user.id)
+            print("EMAIL DEL USUARIO:", user.email)
+            print("=== FIN DEL PROCESO DE REGISTRO ===")
+            return user
+        except Exception as e:
+            print("ERROR AL CREAR USUARIO:", str(e))
+            print("TIPO DE ERROR:", type(e).__name__)
+            print("TRACEBACK:", e.__traceback__)
+            raise e
+
 class CustomUserDetailsSerializer(UserDetailsSerializer):
     class Meta(UserDetailsSerializer.Meta):
         model = CustomUser
