@@ -57,8 +57,8 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "dj_rest_auth",
-    "dj_rest_auth.registration",
+    "rest_auth",
+    "rest_auth.registration",
     
     # Local apps
     "drfarequipamarket.users.apps.UsersConfig",

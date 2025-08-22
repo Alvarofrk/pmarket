@@ -12,85 +12,26 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CustomRegisterSerializer(RegisterSerializer):
     def __init__(self, *args, **kwargs):
-        print("=== CONSTRUCTOR DEL SERIALIZER ===")
-        print("ARGS:", args)
-        print("KWARGS:", kwargs)
         print("INSTANCIANDO CustomRegisterSerializer")
         super().__init__(*args, **kwargs)
-        print("=== FIN DEL CONSTRUCTOR ===")
-
     username = serializers.CharField(required=True, max_length=150)
     name = serializers.CharField(required=True, max_length=150)
     phone = serializers.CharField(required=False, max_length=15)
 
-    def is_valid(self, raise_exception=False):
-        print("=== IS_VALID ===")
-        try:
-            result = super().is_valid(raise_exception=raise_exception)
-            print("IS_VALID RESULT:", result)
-            if not result:
-                print("ERRORES DE VALIDACIÓN:", self.errors)
-            return result
-        except Exception as e:
-            print("ERROR EN IS_VALID:", str(e))
-            print("TIPO DE ERROR:", type(e).__name__)
-            raise e
-
-    def run_validation(self, data):
-        print("=== RUN_VALIDATION ===")
-        print("DATA EN RUN_VALIDATION:", data)
-        try:
-            result = super().run_validation(data)
-            print("RUN_VALIDATION EXITOSO:", result)
-            return result
-        except Exception as e:
-            print("ERROR EN RUN_VALIDATION:", str(e))
-            print("TIPO DE ERROR:", type(e).__name__)
-            raise e
-
     def get_cleaned_data(self):
-        print("=== GET_CLEANED_DATA ===")
-        cleaned_data = super(CustomRegisterSerializer, self).get_cleaned_data()
-        print("CLEANED_DATA DEL PADRE:", cleaned_data)
-        result = {
+        super(CustomRegisterSerializer, self).get_cleaned_data()
+        return {
             "username": self.validated_data.get("username", ""),
             "password1": self.validated_data.get("password1", ""),
             "password2": self.validated_data.get("password2", ""),
             "email": self.validated_data.get("email", ""),
-            "first_name": self.validated_data.get("name", ""),  # Mapear 'name' a 'first_name'
+            "name": self.validated_data.get("name", ""),
             "phone": self.validated_data.get("phone", ""),
         }
-        print("CLEANED_DATA FINAL:", result)
-        return result
 
     def validate(self, data):
-        print("=== VALIDATE ===")
-        print("DATA RECIBIDA EN REGISTRO:", data)
-        print("VALIDATED_DATA ANTES:", self.validated_data)
-        result = super().validate(data)
-        print("VALIDATED_DATA DESPUÉS:", self.validated_data)
-        print("RESULTADO VALIDATE:", result)
-        return result
-
-    def save(self, request):
-        print("=== INICIO DEL PROCESO DE REGISTRO ===")
-        print("INSTANCIANDO CustomRegisterSerializer")
-        print("REQUEST:", request)
-        print("VALIDATED_DATA:", self.validated_data)
-
-        try:
-            print("LLAMANDO AL MÉTODO SAVE DEL PADRE...")
-            user = super(CustomRegisterSerializer, self).save(request)
-            print("USUARIO CREADO EXITOSAMENTE:", user)
-            print("ID DEL USUARIO:", user.id)
-            print("EMAIL DEL USUARIO:", user.email)
-            print("=== FIN DEL PROCESO DE REGISTRO ===")
-            return user
-        except Exception as e:
-            print("ERROR AL CREAR USUARIO:", str(e))
-            print("TIPO DE ERROR:", type(e).__name__)
-            print("TRACEBACK:", e.__traceback__)
-            raise e
+        print(f"DATA RECIBIDA EN REGISTRO: {data}")
+        return super().validate(data)
 
 class CustomUserDetailsSerializer(UserDetailsSerializer):
     class Meta(UserDetailsSerializer.Meta):
