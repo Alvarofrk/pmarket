@@ -23,6 +23,18 @@ class CustomRegisterSerializer(RegisterSerializer):
     name = serializers.CharField(required=True, max_length=150)
     phone = serializers.CharField(required=False, max_length=15)
 
+    def run_validation(self, data):
+        print("=== RUN_VALIDATION ===")
+        print("DATA EN RUN_VALIDATION:", data)
+        try:
+            result = super().run_validation(data)
+            print("RUN_VALIDATION EXITOSO:", result)
+            return result
+        except Exception as e:
+            print("ERROR EN RUN_VALIDATION:", str(e))
+            print("TIPO DE ERROR:", type(e).__name__)
+            raise e
+
     def get_cleaned_data(self):
         print("=== GET_CLEANED_DATA ===")
         cleaned_data = super(CustomRegisterSerializer, self).get_cleaned_data()
@@ -32,7 +44,7 @@ class CustomRegisterSerializer(RegisterSerializer):
             "password1": self.validated_data.get("password1", ""),
             "password2": self.validated_data.get("password2", ""),
             "email": self.validated_data.get("email", ""),
-            "name": self.validated_data.get("name", ""),
+            "first_name": self.validated_data.get("name", ""),  # Mapear 'name' a 'first_name'
             "phone": self.validated_data.get("phone", ""),
         }
         print("CLEANED_DATA FINAL:", result)
