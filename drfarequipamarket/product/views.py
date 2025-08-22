@@ -36,18 +36,82 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Product.objects.all()
-        product_name = self.request.query_params.get("product_name")
-        mine = self.request.query_params.get("mine")
+        
+        # Filtro por nombre del producto
+        product_name = self.request.query_params.get("search")
         if product_name is not None:
             queryset = queryset.filter(name__icontains=product_name)
+        
+        # Filtro por categoría
+        category = self.request.query_params.get("category")
+        if category is not None:
+            queryset = queryset.filter(category__id=category)
+        
+        # Filtro por precio mínimo
+        min_price = self.request.query_params.get("min_price")
+        if min_price is not None:
+            try:
+                min_price_float = float(min_price)
+                queryset = queryset.filter(price__gte=min_price_float)
+            except ValueError:
+                pass
+        
+        # Filtro por precio máximo
+        max_price = self.request.query_params.get("max_price")
+        if max_price is not None:
+            try:
+                max_price_float = float(max_price)
+                queryset = queryset.filter(price__lte=max_price_float)
+            except ValueError:
+                pass
+        
+        # Filtro por departamento
+        departamento = self.request.query_params.get("departamento")
+        if departamento is not None:
+            queryset = queryset.filter(departamento=departamento)
+        
+        # Filtro por provincia
+        provincia = self.request.query_params.get("provincia")
+        if provincia is not None:
+            queryset = queryset.filter(provincia=provincia)
+        
+        # Filtro por distrito
+        distrito = self.request.query_params.get("distrito")
+        if distrito is not None:
+            queryset = queryset.filter(distrito=distrito)
+        
+        # Filtro por productos del usuario
+        mine = self.request.query_params.get("mine")
         if mine == "true":
             queryset = queryset.filter(vendor=self.request.user)
+        
         return queryset
 
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                "product_name", OpenApiTypes.STR, OpenApiParameter.QUERY
+                "search", OpenApiTypes.STR, OpenApiParameter.QUERY, description="Buscar productos por nombre"
+            ),
+            OpenApiParameter(
+                "category", OpenApiTypes.INT, OpenApiParameter.QUERY, description="Filtrar por ID de categoría"
+            ),
+            OpenApiParameter(
+                "min_price", OpenApiTypes.FLOAT, OpenApiParameter.QUERY, description="Precio mínimo"
+            ),
+            OpenApiParameter(
+                "max_price", OpenApiTypes.FLOAT, OpenApiParameter.QUERY, description="Precio máximo"
+            ),
+            OpenApiParameter(
+                "departamento", OpenApiTypes.STR, OpenApiParameter.QUERY, description="Filtrar por departamento"
+            ),
+            OpenApiParameter(
+                "provincia", OpenApiTypes.STR, OpenApiParameter.QUERY, description="Filtrar por provincia"
+            ),
+            OpenApiParameter(
+                "distrito", OpenApiTypes.STR, OpenApiParameter.QUERY, description="Filtrar por distrito"
+            ),
+            OpenApiParameter(
+                "mine", OpenApiTypes.STR, OpenApiParameter.QUERY, description="Filtrar productos del usuario actual (true/false)"
             )
         ],
         responses=ProductSerializer,
