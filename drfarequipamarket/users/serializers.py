@@ -23,6 +23,19 @@ class CustomRegisterSerializer(RegisterSerializer):
     name = serializers.CharField(required=True, max_length=150)
     phone = serializers.CharField(required=False, max_length=15)
 
+    def is_valid(self, raise_exception=False):
+        print("=== IS_VALID ===")
+        try:
+            result = super().is_valid(raise_exception)
+            print("IS_VALID RESULT:", result)
+            if not result:
+                print("ERRORES DE VALIDACIÓN:", self.errors)
+            return result
+        except Exception as e:
+            print("ERROR EN IS_VALID:", str(e))
+            print("TIPO DE ERROR:", type(e).__name__)
+            raise e
+
     def run_validation(self, data):
         print("=== RUN_VALIDATION ===")
         print("DATA EN RUN_VALIDATION:", data)
