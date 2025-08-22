@@ -12,15 +12,22 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CustomRegisterSerializer(RegisterSerializer):
     def __init__(self, *args, **kwargs):
+        print("=== CONSTRUCTOR DEL SERIALIZER ===")
+        print("ARGS:", args)
+        print("KWARGS:", kwargs)
         print("INSTANCIANDO CustomRegisterSerializer")
         super().__init__(*args, **kwargs)
+        print("=== FIN DEL CONSTRUCTOR ===")
+
     username = serializers.CharField(required=True, max_length=150)
     name = serializers.CharField(required=True, max_length=150)
     phone = serializers.CharField(required=False, max_length=15)
 
     def get_cleaned_data(self):
+        print("=== GET_CLEANED_DATA ===")
         cleaned_data = super(CustomRegisterSerializer, self).get_cleaned_data()
-        return {
+        print("CLEANED_DATA DEL PADRE:", cleaned_data)
+        result = {
             "username": self.validated_data.get("username", ""),
             "password1": self.validated_data.get("password1", ""),
             "password2": self.validated_data.get("password2", ""),
@@ -28,10 +35,17 @@ class CustomRegisterSerializer(RegisterSerializer):
             "name": self.validated_data.get("name", ""),
             "phone": self.validated_data.get("phone", ""),
         }
+        print("CLEANED_DATA FINAL:", result)
+        return result
 
     def validate(self, data):
-        print(f"DATA RECIBIDA EN REGISTRO: {data}")
-        return super().validate(data)
+        print("=== VALIDATE ===")
+        print("DATA RECIBIDA EN REGISTRO:", data)
+        print("VALIDATED_DATA ANTES:", self.validated_data)
+        result = super().validate(data)
+        print("VALIDATED_DATA DESPUÉS:", self.validated_data)
+        print("RESULTADO VALIDATE:", result)
+        return result
 
     def save(self, request):
         print("=== INICIO DEL PROCESO DE REGISTRO ===")
