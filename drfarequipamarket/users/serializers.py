@@ -26,7 +26,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     def is_valid(self, raise_exception=False):
         print("=== IS_VALID ===")
         try:
-            result = super().is_valid(raise_exception)
+            result = super().is_valid(raise_exception=raise_exception)
             print("IS_VALID RESULT:", result)
             if not result:
                 print("ERRORES DE VALIDACIÓN:", self.errors)
