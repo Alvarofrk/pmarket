@@ -251,10 +251,194 @@ class ProductViewSet(viewsets.ModelViewSet):
         """
         Endpoint que marca un producto como vendido
         """
-        product = self.get_object()
-        product.is_available = False
-        product.save()
-        return Response({"detail": "Producto marcado como vendido"})
+        try:
+            product = self.get_object()
+            
+            # Verificar que el usuario es el vendedor del producto
+            if product.vendor != request.user:
+                return Response(
+                    {"detail": "No tienes permisos para cambiar el estado de este producto"}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
+            # Verificar que el producto no esté ya vendido
+            if not product.is_available:
+                return Response(
+                    {"detail": "Este producto ya está marcado como vendido"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            product.is_available = False
+            product.save()
+            
+            logger.info(f"Producto {product.id} marcado como vendido por usuario {request.user.id}")
+            
+            return Response({
+                "detail": "Producto marcado como vendido exitosamente",
+                "product_id": product.id,
+                "is_available": product.is_available
+            })
+            
+        except Exception as e:
+            logger.error(f"Error al marcar producto como vendido: {str(e)}")
+            return Response(
+                {"detail": "Error interno del servidor"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    @action(
+        methods=["post"],
+        detail=False,
+        url_path=r"(?P<pk>\d+)/available",
+        url_name="mark_as_available",
+    )
+    def mark_as_available(self, request, pk=None):
+        """
+        Endpoint que marca un producto como disponible
+        """
+        try:
+            product = self.get_object()
+            
+            # Verificar que el usuario es el vendedor del producto
+            if product.vendor != request.user:
+                return Response(
+                    {"detail": "No tienes permisos para cambiar el estado de este producto"}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
+            # Verificar que el producto no esté ya disponible
+            if product.is_available:
+                return Response(
+                    {"detail": "Este producto ya está marcado como disponible"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            product.is_available = True
+            product.save()
+            
+            logger.info(f"Producto {product.id} marcado como disponible por usuario {request.user.id}")
+            
+            return Response({
+                "detail": "Producto marcado como disponible exitosamente",
+                "product_id": product.id,
+                "is_available": product.is_available
+            })
+            
+        except Exception as e:
+            logger.error(f"Error al marcar producto como disponible: {str(e)}")
+            return Response(
+                {"detail": "Error interno del servidor"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    @action(
+        methods=["post"],
+        detail=False,
+        url_path=r"(?P<pk>\d+)/toggle",
+        url_name="toggle_availability",
+    )
+    def toggle_availability(self, request, pk=None):
+        """
+        Endpoint que alterna el estado de disponibilidad de un producto
+        """
+        try:
+            product = self.get_object()
+            
+            # Verificar que el usuario es el vendedor del producto
+            if product.vendor != request.user:
+                return Response(
+                    {"detail": "No tienes permisos para cambiar el estado de este producto"}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
+            # Alternar el estado
+            old_status = "disponible" if product.is_available else "vendido"
+            product.is_available = not product.is_available
+            new_status = "disponible" if product.is_available else "vendido"
+            product.save()
+            
+            logger.info(f"Producto {product.id} cambiado de {old_status} a {new_status} por usuario {request.user.id}")
+            
+            return Response({
+                "detail": f"Producto cambiado de {old_status} a {new_status} exitosamente",
+                "product_id": product.id,
+                "is_available": product.is_available,
+                "old_status": old_status,
+                "new_status": new_status
+            })
+            
+        except Exception as e:
+            logger.error(f"Error al alternar disponibilidad del producto: {str(e)}")
+            return Response(
+                {"detail": "Error interno del servidor"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    @action(
+        methods=["patch"],
+        detail=False,
+        url_path=r"(?P<pk>\d+)/availability",
+        url_name="update_availability",
+    )
+    def update_availability(self, request, pk=None):
+        """
+        Endpoint que actualiza el estado de disponibilidad de un producto
+        """
+        try:
+            product = self.get_object()
+            
+            # Verificar que el usuario es el vendedor del producto
+            if product.vendor != request.user:
+                return Response(
+                    {"detail": "No tienes permisos para cambiar el estado de este producto"}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
+            # Obtener el nuevo estado del request
+            new_availability = request.data.get('is_available')
+            
+            if new_availability is None:
+                return Response(
+                    {"detail": "El campo 'is_available' es requerido"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            if not isinstance(new_availability, bool):
+                return Response(
+                    {"detail": "El campo 'is_available' debe ser un valor booleano"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Verificar si el estado realmente cambió
+            if product.is_available == new_availability:
+                status_text = "disponible" if new_availability else "vendido"
+                return Response(
+                    {"detail": f"El producto ya está marcado como {status_text}"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Actualizar el estado
+            old_status = "disponible" if product.is_available else "vendido"
+            product.is_available = new_availability
+            new_status = "disponible" if new_availability else "vendido"
+            product.save()
+            
+            logger.info(f"Producto {product.id} cambiado de {old_status} a {new_status} por usuario {request.user.id}")
+            
+            return Response({
+                "detail": f"Producto cambiado de {old_status} a {new_status} exitosamente",
+                "product_id": product.id,
+                "is_available": product.is_available,
+                "old_status": old_status,
+                "new_status": new_status
+            })
+            
+        except Exception as e:
+            logger.error(f"Error al actualizar disponibilidad del producto: {str(e)}")
+            return Response(
+                {"detail": "Error interno del servidor"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()

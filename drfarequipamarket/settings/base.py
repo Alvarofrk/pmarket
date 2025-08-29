@@ -57,8 +57,8 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "rest_auth",
-    "rest_auth.registration",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
     
     # Local apps
     "drfarequipamarket.users.apps.UsersConfig",
@@ -168,21 +168,27 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {"TITLE": "AQP Market API"}
 
 AUTH_USER_MODEL = "users.CustomUser"
+# Configuración de dj-rest-auth
 REST_AUTH = {
     "REGISTER_SERIALIZER": "drfarequipamarket.users.serializers.CustomRegisterSerializer",
     "USER_DETAILS_SERIALIZER": "drfarequipamarket.users.serializers.CustomUserDetailsSerializer",
     "PASSWORD_RESET_SERIALIZER": "drfarequipamarket.users.serializers.CustomPasswordResetSerializer",
     "PASSWORD_RESET_CONFIRM_SERIALIZER": "drfarequipamarket.users.serializers.CustomPasswordResetConfirmSerializer",
+    "USE_JWT": False,
+    "TOKEN_MODEL": "rest_framework.authtoken.models.Token",
+    "USER_DETAILS_SERIALIZER": "drfarequipamarket.users.serializers.CustomUserDetailsSerializer",
 }
 
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+# Configuración de allauth
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_VERIFICATION = "optional"
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_VERIFICATION = "none"  # Cambiado de "optional" a "none" para desarrollo
+ACCOUNT_CONFIRM_EMAIL_ON_GET = False  # Cambiado a False para desarrollo
+
+# Configuración de redirección de email
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/?verification=1"
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/?verification=1"
 

@@ -21,7 +21,6 @@ class CustomRegisterSerializer(RegisterSerializer):
     phone = serializers.CharField(required=False, max_length=15)
 
     def get_cleaned_data(self):
-        super(CustomRegisterSerializer, self).get_cleaned_data()
         return {
             "username": self.validated_data.get("username", ""),
             "password1": self.validated_data.get("password1", ""),
@@ -34,6 +33,13 @@ class CustomRegisterSerializer(RegisterSerializer):
     def validate(self, data):
         print(f"DATA RECIBIDA EN REGISTRO: {data}")
         return super().validate(data)
+    
+    def save(self, request):
+        user = super().save(request)
+        user.name = self.cleaned_data.get('name', '')
+        user.phone = self.cleaned_data.get('phone', '')
+        user.save()
+        return user
 
 class CustomUserDetailsSerializer(UserDetailsSerializer):
     class Meta(UserDetailsSerializer.Meta):
