@@ -171,6 +171,8 @@ AUTH_USER_MODEL = "users.CustomUser"
 REST_AUTH = {
     "REGISTER_SERIALIZER": "drfarequipamarket.users.serializers.CustomRegisterSerializer",
     "USER_DETAILS_SERIALIZER": "drfarequipamarket.users.serializers.CustomUserDetailsSerializer",
+    "PASSWORD_RESET_SERIALIZER": "drfarequipamarket.users.serializers.CustomPasswordResetSerializer",
+    "PASSWORD_RESET_CONFIRM_SERIALIZER": "drfarequipamarket.users.serializers.CustomPasswordResetConfirmSerializer",
 }
 
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -185,7 +187,14 @@ ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/?verification=1"
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/?verification=1"
 
 SITE_ID = 1
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# Importar configuración de email
+try:
+    from .email import *
+except ImportError:
+    # Fallback a configuración básica
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    PASSWORD_RESET_TIMEOUT = 86400  # 24 horas en segundos
 
 # CORS configuration
 CORS_ALLOW_ALL_ORIGINS = True

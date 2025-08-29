@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from dj_rest_auth.serializers import UserDetailsSerializer
+from dj_rest_auth.serializers import PasswordResetSerializer, PasswordResetConfirmSerializer
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from .models import CustomUser
 
 
@@ -37,3 +39,21 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
     class Meta(UserDetailsSerializer.Meta):
         model = CustomUser
         fields = ('id', 'email', 'username', 'name', 'phone')
+
+# Serializers para Password Reset
+class CustomPasswordResetSerializer(PasswordResetSerializer):
+    password_reset_form_class = PasswordResetForm
+    
+    def get_email_options(self):
+        return {
+            'email_template_name': 'account/email/password_reset_key_message.txt',
+            'subject_template_name': 'account/email/password_reset_key_message_subject.txt',
+            'html_email_template_name': 'account/email/password_reset_key_message.html',
+            'extra_email_context': {
+                'site_name': 'Perú Ofertas',
+                'user': self.user,
+            }
+        }
+
+class CustomPasswordResetConfirmSerializer(PasswordResetConfirmSerializer):
+    set_password_form_class = SetPasswordForm
